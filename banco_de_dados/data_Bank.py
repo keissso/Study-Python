@@ -1,45 +1,69 @@
 from datetime import datetime
 
-data_bank = {}#
+#Data bank class
+class DataBank:
+    def __init__(self):
+        self.data_bank = {}
 
-#Data bank imput
-def data_imput(id, name, email): 
-    if id in data_bank: 
-        print(f"Id{id} already exists")
-    else : 
-        data_bank[id] = { 
-            "Name" : name,
-            "Email" : email,
-            "Data" : datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
-        print(f"User{name}, sucefully registred!")
+    #Check if User exits 
+    def user_exists(self, user_id):
+        if user_id not in self.data_bank:
+            print(f"User with ID {user_id} not found!")
+            return False
+        return True
+    
+    #Adds User in the data Base 
+    def add_user(self, user_id, name, email):
+        if not isinstance(user_id, int) or not name or not email:
+            print("Invalid input. Please provide a valid ID, name, and email.")
+            return
 
-#Data bank listing of data
-def listData():
-    print("Users registred:")
-    list(map(lambda item: print(f"Id: {item[0]}, Name:{item[1]['name']}, Email:{item[1]['email']}, Data:{item[1]['data']}"), data_bank.items()))
+        if user_id in self.data_bank: #Checks if user is in the Data Base 
+            print(f"User with ID {user_id} already exists.")
+        else:
+            self.data_bank[user_id] = {
+                "Name": name,
+                "Email": email,
+                "Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            print(f"User {name} successfully registered!")
 
-#Email update in Data bank
-def Email_change(id, new_email): 
-    if id in data_bank:
-        data_bank[id]['email'] = new_email
-        print("Email updated with sucess!")
-    else: 
-        print("User not found!")
+    #Lists all users in the Data base 
+    def list_users(self):
+        if not self.data_bank: #checks if has all users info in the Data base
+            print("No users registered.")
+            return
 
-#Delete user in Data bank 
-def delete_user(id):
-    if id in data_bank: 
-        del data_bank[id]
-        print(f"User {id} deleted with sucess!")
-    else :
-        print("User not found!")
+        print("Users registered:") #If exists it returns 
+        for user_id, details in self.data_bank.items():
+            print(
+                f"ID: {user_id}, Name: {details['Name']}, Email: {details['Email']}, Date: {details['Date']}"
+            )
 
-#User by name in data bank
-def find_by_name(name):
-    result = list(filter(lambda x: x[1]['name'].lower() == name.lower(), data_bank.items()))
-    if result: 
-        print("results: ")
-        list(map(lambda item: print(f"ID: {item[0]}, Name: {item[1]['name']}, Email: {item[1],['email']}, Data: {item[1]['data']}"), result))
-    else: 
-        print("User not found!")
+    #Updates email of the user 
+    def update_email(self, user_id, new_email):
+        if self.user_exists(user_id):  #If user exists it updates the user Email 
+            self.data_bank[user_id]["Email"] = new_email
+            print(f"Email for user ID {user_id} updated successfully!")
+
+    #Deletes user in the Data base
+    def delete_user(self, user_id):
+        if self.user_exists(user_id):
+            del self.data_bank[user_id]
+            print(f"User with ID {user_id} deleted successfully!")
+
+    #Finds user by name in the Data base 
+    def find_by_name(self, name):
+        results = [
+            (user_id, details)
+            for user_id, details in self.data_bank.items()
+            if details["Name"].lower() == name.lower()
+        ]
+        if results: #If name has a result it returns all infos of him
+            print("Results:")
+            for user_id, details in results:
+                print(
+                    f"ID: {user_id}, Name: {details['Name']}, Email: {details['Email']}, Date: {details['Date']}"
+                )
+        else: #else it not returns 
+            print(f"No users found with the name '{name}'.")
