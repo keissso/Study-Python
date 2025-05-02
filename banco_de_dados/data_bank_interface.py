@@ -25,18 +25,19 @@ def menu_interface():
 #Menu Choices 
 def menu_choices(choice):
     #Handles the User choice 
-    if choice == 1:
-        insert_info()
-    elif choice == 2:
-        update_email()
-    elif choice == 3:
-        find_user()
-    elif choice == 4:
-        delete_user()
-    elif choice == 5:
-        exit_menu()
-    else:
-        print("Invalid choice! Please select a valid option.")
+    match choice: 
+        case 1:
+            insert_info()
+        case 2: 
+            update_email()
+        case 3: 
+            find_user()
+        case 4:
+            delete_user()
+        case 5:
+            exit_menu()
+        case _:
+            print("Option invalid, Try again!")
 
 #Input info in Data Base 
 def insert_info():
